@@ -3,23 +3,21 @@ import numpy as np
 import os
 import subprocess
 import imageio_ffmpeg
-CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-def to_base62(num):
-    if num == 0: return "00"
-    s = ""
-    temp = num
-    while temp > 0:
-        s = CHARSET[temp % 62] + s
-        temp //= 62
-    return s.zfill(2)
-def from_base62(s):
-    num = 0
-    for char in s:
-        num = num * 62 + CHARSET.find(char)
-    return num
 def clean_key(raw_key):
     if not raw_key: return ""
     return raw_key.replace("KEY:", "").replace(" ", "").strip()
+def hash_str(s):
+    h = 5381
+    for c in s:
+        h = (h * 33 + ord(c)) & 0xFFFFFFFF
+    return h
+def seeded_shuffle(arr, seed):
+    rng_state = seed & 0xFFFFFFFF
+    for i in range(len(arr) - 1, 0, -1):
+        rng_state = (rng_state * 1103515245 + 12345) & 0xFFFFFFFF
+        r = rng_state % (i + 1)
+        arr[i], arr[r] = arr[r], arr[i]
+    return arr
 def process_visual(input_path, output_path, cols, rows, indices, is_video=True, reverse=False, target_w=None, target_h=None):
     current_indices = indices
     if reverse:
