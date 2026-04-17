@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Media-Crypto Studio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'components/banner.html' %}
+    
+    <div class="container">
+        <h2>🔒 MEDIA-CRYPTO</h2>
+        {% include 'components/upload.html' %}
+        {% include 'components/settings.html' %}
+        
+        <button onclick="startBatch('scramble')" class="btn">ENCRYPT FILES</button>
+
+        <div class="section" style="margin-top: 15px;">
+            <strong>Decryption</strong>
+            <input type="text" id="decKey" placeholder="Paste Key (e.g. 10x10|seed|a)" style="margin-bottom: 5px;">
+            <button onclick="startBatch('unscramble')" class="btn btn-un">DECRYPT FILES</button>
+        </div>
+
+        {% include 'components/progress.html' %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
